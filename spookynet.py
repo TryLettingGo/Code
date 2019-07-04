@@ -7,20 +7,24 @@ Created on Mon Jul  1 17:03:46 2019
 
 from keras import applications
 from keras.preprocessing.image import ImageDataGenerator
+from keras.preprocessing import image
 from keras import optimizers
 from keras.models import Sequential, Model 
 from keras.layers import Dropout, Flatten, Dense, GlobalAveragePooling2D
 from keras import backend as k 
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, TensorBoard, EarlyStopping
+from keras.applications import imagenet_utils
+import keras
 import os
+import numpy as np
 
 img_width = 256
 img_height = 256 
 train_data_dir = "D:/query_data/facialrec/Images"
 validation_data_dir = "data/val"
-nb_train_samples = 4
+nb_train_samples = 9000
 nb_validation_samples = 4
-batch_size = 6
+batch_size = 4
 epochs = 5
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
@@ -88,3 +92,32 @@ model_final.fit_generator(
         #validation_data = validation_generator,
         #nb_val_samples = nb_validation_samples,
         callbacks = [checkpoint, early])
+
+
+#test an image
+img_path = "C:/Users/MSI/Documents/Github/FacialRecAnalysis/Data/"
+
+diana = image.load_img(img_path + "image.jpg", target_size = (256, 256))
+karma = image.load_img(img_path + "image2.jpg", target_size = (256, 256))
+ezreal = image.load_img(img_path + "image3.jpg", target_size = (256, 256))
+
+array1 = image.img_to_array(diana)
+array2 = image.img_to_array(karma)
+array3 = image.img_to_array(ezreal)
+exd1 = np.expand_dims(array1, axis = 0)
+exd2 = np.expand_dims(array2, axis = 0)
+exd3 = np.expand_dims(array3, axis = 0)
+diana_test = keras.applications.mobilenet.preprocess_input(exd1)
+karma_test = keras.applications.mobilenet.preprocess_input(exd2)
+ezreal_test = keras.applications.mobilenet.preprocess_input(exd3)
+
+pred1 = model_final.predict(diana_test)
+pred2 = model_final.predict(karma_test)
+pred3 = model_final.predict(ezreal_test)
+result1 = imagenet_utils.decode_predictions(pred1)
+result2 = imagenet_utils.decode_predictions(pred2)
+result3 = imagenet_utils.decode_predictions(pred3)
+
+test1 = model_final.predict(diana)
+test2 = model_final.predict(karma)
+test3 = model_final.predict(ezreal)
