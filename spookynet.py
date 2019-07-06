@@ -95,29 +95,19 @@ model_final.fit_generator(
 
 
 #test an image
-img_path = "C:/Users/MSI/Documents/Github/FacialRecAnalysis/Data/"
+def test_image(filename):
+    
+    img_path = "C:/Users/MSI/Documents/Github/FacialRecAnalysis/Data/"
+    load = image.load_img(img_path + filename, target_size = (256, 256))
+    array = image.img_to_array(load)
+    exd = np.expand_dims(array, axis = 0)
+    test = keras.applications.mobilenet.preprocess_input(exd)
+    pred = model_final.predict(test)
+    
+    return pred
 
-diana = image.load_img(img_path + "image.jpg", target_size = (256, 256))
-karma = image.load_img(img_path + "image2.jpg", target_size = (256, 256))
-ezreal = image.load_img(img_path + "image3.jpg", target_size = (256, 256))
-
-array1 = image.img_to_array(diana)
-array2 = image.img_to_array(karma)
-array3 = image.img_to_array(ezreal)
-exd1 = np.expand_dims(array1, axis = 0)
-exd2 = np.expand_dims(array2, axis = 0)
-exd3 = np.expand_dims(array3, axis = 0)
-diana_test = keras.applications.mobilenet.preprocess_input(exd1)
-karma_test = keras.applications.mobilenet.preprocess_input(exd2)
-ezreal_test = keras.applications.mobilenet.preprocess_input(exd3)
-
-pred1 = model_final.predict(diana_test)
-pred2 = model_final.predict(karma_test)
-pred3 = model_final.predict(ezreal_test)
-result1 = imagenet_utils.decode_predictions(pred1)
-result2 = imagenet_utils.decode_predictions(pred2)
-result3 = imagenet_utils.decode_predictions(pred3)
-
-test1 = model_final.predict(diana)
-test2 = model_final.predict(karma)
-test3 = model_final.predict(ezreal)
+bmdiana = test_image("image.jpg")
+karma = test_image("image2.jpg")
+ezreal = test_image("image3.jpg")
+frezreal = test_image("image4.jpg")
+diana = test_image("image5.jpg")
