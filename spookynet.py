@@ -21,9 +21,9 @@ import numpy as np
 img_width = 256
 img_height = 256 
 train_data_dir = "D:/query_data/facialrec/Images"
-validation_data_dir = "data/val"
-nb_train_samples = 9000
-nb_validation_samples = 4
+validation_data_dir = train_data_dir
+nb_train_samples = 17250
+nb_validation_samples = 100
 batch_size = 4
 epochs = 5
 
@@ -57,7 +57,8 @@ train_datagen = ImageDataGenerator(
         zoom_range = 0.3,
         width_shift_range = 0.3,
         height_shift_range=0.3,
-        rotation_range=30)
+        rotation_range=30,
+        validation_split = 0.15)
 
 test_datagen = ImageDataGenerator(
         rescale = 1./255,
@@ -72,13 +73,16 @@ train_generator = train_datagen.flow_from_directory(
         train_data_dir,
         target_size = (img_height, img_width),
         batch_size = batch_size, 
-        class_mode = "categorical")
-'''
-validation_generator = test_datagen.flow_from_directory(
+        class_mode = "categorical",
+        subset = 'training')
+
+validation_generator = train_datagen.flow_from_directory(
         validation_data_dir,
         target_size = (img_height, img_width),
-        class_mode = "categorical")
-'''
+        batch_size = batch_size,
+        class_mode = "categorical",
+        subset = 'validation')
+
 # Save the model according to the conditions  
 checkpoint = ModelCheckpoint("vgg16_1.h5", monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 early = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1, mode='auto')
@@ -87,10 +91,10 @@ early = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1, mo
 # Train the model 
 model_final.fit_generator(
         train_generator,
-        samples_per_epoch = nb_train_samples,
+        steps_per_epoch = train_generator.samples // batch_size,
         epochs = epochs,
-        #validation_data = validation_generator,
-        #nb_val_samples = nb_validation_samples,
+        validation_data = validation_generator,
+        validation_steps = validation_generator.samples // batch_size,
         callbacks = [checkpoint, early])
 
 
@@ -111,3 +115,5 @@ karma = test_image("image2.jpg")
 ezreal = test_image("image3.jpg")
 frezreal = test_image("image4.jpg")
 diana = test_image("image5.jpg")
+
+print("Your neural net is perfect, there's nothing to worry about.")
