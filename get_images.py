@@ -10,8 +10,10 @@ import cv2
 import numpy as np
 import os
 from get_art import get_art
+from cin_images import cin_images
 
 #setup
+
 git_dir = "C:/Users/MSI/Documents/Github/FacialRecAnalysis/"
 vid_dir = "D:/query_data/facialrec/Videos/"
 img_dir = "D:/query_data/facialrec/Images/"
@@ -87,4 +89,14 @@ for i in range(len(champs)):
     art_dir = img_dir + name + "/fanart/"
     os.makedirs(art_dir, exist_ok = True)
     get_art(name, art_dir)
-        
+    
+    #cinematic images
+    cin_img_dir = "D:/query_data/facialrec/Cinematic_Images/"
+    cin_vid_dir = vid_dir + "cinematics"
+    champ_cin_dir = "D:/query_data/facialrec/Images/" + name + "/cinematics/"
+    os.makedirs(champ_cin_dir, exist_ok = True)
+    
+#screw it, I'm hard coding
+cin_images("awaken")
+cin_images("a_new_dawn")
+cin_images("the_climb")

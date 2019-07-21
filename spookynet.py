@@ -25,7 +25,7 @@ validation_data_dir = train_data_dir
 nb_train_samples = 17250
 nb_validation_samples = 100
 batch_size = 4
-epochs = 5
+epochs = 3
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
@@ -115,5 +115,7 @@ karma = test_image("image2.jpg")
 ezreal = test_image("image3.jpg")
 frezreal = test_image("image4.jpg")
 diana = test_image("image5.jpg")
+camille = test_image("image6.jpg")
+hugh_jackman = test_image("image7.jpg")
 
 print("Your neural net is perfect, there's nothing to worry about.")
