@@ -28,7 +28,7 @@ coords = pd.read_csv(git_dir + "Data/coords.csv")
 for i in range(len(champs)):
     name = champs[i]
     
-    os.makedirs(img_dir + name, exist_ok = True)
+    #os.makedirs(img_dir + name, exist_ok = True)
     champ_dir  = img_dir + name
     #logins
     
@@ -47,7 +47,7 @@ for i in range(len(champs)):
         newimg = cv2.resize(newimg, (50, 50), interpolation = cv2.INTER_AREA)
         cv2.imwrite(login_dir + name + "_login_frame_" + str(count) + ".jpg", newimg)     # save frame as JPEG file      
         success,image = vidcap.read()
-        print('Read a new frame: ', success)
+        print('Read a new ' + name + ' frame: ', success)
         count += 1
         
     
@@ -82,11 +82,11 @@ for i in range(len(champs)):
 
             # cv2.imwrite("frame%d.jpg" % count2, image)     # save frame as JPEG file      
             success2,image2 = vidcap2.read()
-            print('Read new frame: ', success2)
+            print('Read new ' + name + ' frame: ', success2)
             count2 += 1
     
     #getting fanart
-    art_dir = img_dir + name + "/fanart/"
+    '''art_dir = img_dir + name + "/fanart/"
     os.makedirs(art_dir, exist_ok = True)
     get_art(name, art_dir)
     
@@ -95,7 +95,7 @@ for i in range(len(champs)):
     cin_vid_dir = vid_dir + "cinematics"
     champ_cin_dir = "D:/query_data/facialrec/Images/" + name + "/cinematics/"
     os.makedirs(champ_cin_dir, exist_ok = True)
-    
+    '''
 #screw it, I'm hard coding
 cin_images("awaken")
 cin_images("a_new_dawn")

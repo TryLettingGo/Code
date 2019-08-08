@@ -24,8 +24,8 @@ train_data_dir = "D:/query_data/facialrec/Images"
 validation_data_dir = train_data_dir
 nb_train_samples = 17250
 nb_validation_samples = 100
-batch_size = 4
-epochs = 3
+batch_size = 7
+epochs = 2
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
@@ -58,16 +58,16 @@ train_datagen = ImageDataGenerator(
         width_shift_range = 0.3,
         height_shift_range=0.3,
         rotation_range=30,
-        validation_split = 0.15)
+        validation_split = 0.2)
 
-test_datagen = ImageDataGenerator(
+'''test_datagen = ImageDataGenerator(
         rescale = 1./255,
         horizontal_flip = True,
         fill_mode = "nearest",
         zoom_range = 0.3,
         width_shift_range = 0.3,
         height_shift_range=0.3,
-        rotation_range=30)
+        rotation_range=30)'''
 
 train_generator = train_datagen.flow_from_directory(
         train_data_dir,
@@ -117,5 +117,6 @@ frezreal = test_image("image4.jpg")
 diana = test_image("image5.jpg")
 camille = test_image("image6.jpg")
 hugh_jackman = test_image("image7.jpg")
+
 
 print("Your neural net is perfect, there's nothing to worry about.")
