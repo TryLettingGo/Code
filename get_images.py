@@ -31,7 +31,7 @@ for i in range(len(champs)):
     #os.makedirs(img_dir + name, exist_ok = True)
     champ_dir  = img_dir + name
     #logins
-    
+    '''
     vidcap = cv2.VideoCapture(vid_dir + "logins/" + name + '/video_login.mp4')
     success,image = vidcap.read()
     count = 0
@@ -50,13 +50,13 @@ for i in range(len(champs)):
         print('Read a new ' + name + ' frame: ', success)
         count += 1
         
-    
+    '''
     num = os.listdir(vid_dir + "models/" + name) # dir is your directory path
     nfiles = len(num)
     count2 = 0
     for j in range(nfiles):
         
-        vidcap2 = cv2.VideoCapture(vid_dir + "models/" + name + "/video" + str(j) + ".mp4")
+        vidcap2 = cv2.VideoCapture(vid_dir + "models/" + name + "/video_" + str(j) + ".mp4")
         success2,image2 = vidcap2.read()
         model_dir = champ_dir + "/models/"
         os.makedirs(model_dir, exist_ok = True)
@@ -97,6 +97,6 @@ for i in range(len(champs)):
     os.makedirs(champ_cin_dir, exist_ok = True)
     '''
 #screw it, I'm hard coding
-cin_images("awaken")
-cin_images("a_new_dawn")
-cin_images("the_climb")
+#cin_images("awaken")
+#cin_images("a_new_dawn")
+#cin_images("the_climb")

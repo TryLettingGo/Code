@@ -21,11 +21,11 @@ import numpy as np
 img_width = 256
 img_height = 256 
 train_data_dir = "D:/query_data/facialrec/Images"
-validation_data_dir = train_data_dir
+validation_data_dir = "D:/query_data/facialrec/Validation"
 nb_train_samples = 17250
 nb_validation_samples = 100
-batch_size = 7
-epochs = 2
+batch_size = 10
+epochs = 3
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
@@ -57,31 +57,28 @@ train_datagen = ImageDataGenerator(
         zoom_range = 0.3,
         width_shift_range = 0.3,
         height_shift_range=0.3,
-        rotation_range=30,
-        validation_split = 0.2)
+        rotation_range=30)
 
-'''test_datagen = ImageDataGenerator(
+test_datagen = ImageDataGenerator(
         rescale = 1./255,
         horizontal_flip = True,
         fill_mode = "nearest",
         zoom_range = 0.3,
         width_shift_range = 0.3,
         height_shift_range=0.3,
-        rotation_range=30)'''
+        rotation_range=30)
 
 train_generator = train_datagen.flow_from_directory(
         train_data_dir,
         target_size = (img_height, img_width),
         batch_size = batch_size, 
-        class_mode = "categorical",
-        subset = 'training')
+        class_mode = "categorical")
 
-validation_generator = train_datagen.flow_from_directory(
+validation_generator = test_datagen.flow_from_directory(
         validation_data_dir,
         target_size = (img_height, img_width),
         batch_size = batch_size,
-        class_mode = "categorical",
-        subset = 'validation')
+        class_mode = "categorical")
 
 # Save the model according to the conditions  
 checkpoint = ModelCheckpoint("vgg16_1.h5", monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
