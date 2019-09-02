@@ -18,8 +18,8 @@ from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 def get_art(name, direc):
     download_path = direc
     searchtext = name + " lol"
-    num_requested = 200
-    number_of_scrolls = 1 
+    num_requested = 5000
+    number_of_scrolls = 13 
 	# number_of_scrolls * 400 images will be opened in the browser
 
     if not os.path.exists(download_path + searchtext.replace(" ", "_")):

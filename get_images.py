@@ -35,7 +35,7 @@ for i in range(len(champs)):
     os.makedirs(val_dir + name, exist_ok = True)
     champ_dir  = img_dir + name
     #logins
-    
+    '''
     vidcap = cv2.VideoCapture(vid_dir + "logins/" + name + '/video_login.mp4')
     success,image = vidcap.read()
     count = 0
@@ -49,7 +49,7 @@ for i in range(len(champs)):
         print('Read a new ' + name + ' frame: ', success)
         count += 1
         
-    
+    '''
     
     #models
     num = os.listdir(vid_dir + "models/" + name) # dir is your directory path
@@ -69,12 +69,12 @@ for i in range(len(champs)):
             success2,image2 = vidcap2.read()
             print('Read new ' + name + ' frame: ', success2)
             count2 += 1
-    
+    '''
     #getting art data
     art_dir = val_dir + name
-    #os.makedirs(art_dir, exist_ok = True)
-    get_art(name, art_dir)
-    
+    os.makedirs(art_dir, exist_ok = True)
+    get_art(name, art_dir + "/")
+    '''
     #cinematic images
     cin_img_dir = "D:/query_data/facialrec/Cinematic_Images/"
     cin_vid_dir = vid_dir + "cinematics"

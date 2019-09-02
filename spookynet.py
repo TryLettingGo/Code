@@ -17,7 +17,7 @@ from keras.applications import imagenet_utils
 import keras
 import os
 import numpy as np
-
+import pandas as pd
 from keras.optimizers import Adam
 from keras.metrics import categorical_crossentropy
 from keras.applications import MobileNet
@@ -26,12 +26,12 @@ from keras.applications.mobilenet import preprocess_input
 
 img_width = 256
 img_height = 256 
-train_data_dir = "D:/query_data/facialrec/Images"
-validation_data_dir = "D:/query_data/facialrec/Validation"
+train_data_dir = "D:\\query_data\\facialrec\\Images"
+validation_data_dir = "D:\\query_data\\facialrec\\Validation"
 nb_train_samples = 17250
 nb_validation_samples = 100
 batch_size = 7
-epochs = 5
+epochs = 4
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
@@ -105,7 +105,7 @@ model_final.fit_generator(
 
 #test an image
 def test_image(filename):
-    
+    champs = ["Camille", "Diana", "Ezreal", "Graves", "Jayce", "Karma", "Lucian", "Syndra", "Talon", "Vi"]
     img_path = "C:/Users/MSI/Documents/Github/FacialRecAnalysis/Data/"
     load = image.load_img(img_path + filename, target_size = (256, 256))
     array = image.img_to_array(load)
@@ -113,7 +113,9 @@ def test_image(filename):
     test = keras.applications.mobilenet.preprocess_input(exd)
     #pred = model_final.predict(test)
     pred = model.predict(test)
-    return pred
+    loc = np.argmax(pred)
+    name = champs[loc]
+    return name
 
 #implementing mobilenet
 mobile = keras.applications.mobilenet.MobileNet()
@@ -146,7 +148,8 @@ train_datagen = ImageDataGenerator(
         zoom_range = 0.3,
         width_shift_range = 0.3,
         height_shift_range=0.3,
-        rotation_range=30)
+        rotation_range=30,
+        validation_split = 0.2)
 
 test_datagen = ImageDataGenerator(
         rescale = 1./255,
@@ -161,13 +164,15 @@ train_generator = train_datagen.flow_from_directory(
         train_data_dir,
         target_size = (img_height, img_width),
         batch_size = batch_size, 
-        class_mode = "categorical")
+        class_mode = "categorical",
+        subset = 'training')
 
-validation_generator = test_datagen.flow_from_directory(
-        validation_data_dir,
+validation_generator = train_datagen.flow_from_directory(
+        train_data_dir,
         target_size = (img_height, img_width),
         batch_size = batch_size,
-        class_mode = "categorical")
+        class_mode = "categorical",
+        subset = 'validation')
 
 checkpoint = ModelCheckpoint("mobilenet.h5", monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 early = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1, mode='auto')
@@ -181,7 +186,14 @@ model.fit_generator(
         validation_steps = validation_generator.samples // batch_size,
         callbacks = [checkpoint, early])
 
+results = pd.DataFrame(columns = ["target", "prediction"])
+for q in range(30):
+    champs = ["Camille", "Diana", "Ezreal", "Graves", "Jayce", "Karma", "Lucian", "Syndra", "Talon", "Vi"]
+    champion = test_image("image" + str(q + 1) + ".jpg")
+    target_index = int(np.ceil((q + 1)/3))
+    results = results.append({"target": champs[target_index], "prediction": champion}, ignore_index = True)
 
+'''
 bmdiana = test_image("image.jpg")
 karma = test_image("image2.jpg")
 ezreal = test_image("image3.jpg")
@@ -189,7 +201,7 @@ frezreal = test_image("image4.jpg")
 diana = test_image("image5.jpg")
 camille = test_image("image6.jpg")
 hugh_jackman = test_image("image7.jpg")
-
+'''
 
 print("Your neural net is perfect, there's nothing to worry about.")
 

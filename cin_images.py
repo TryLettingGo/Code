@@ -12,8 +12,8 @@ import os
 
 
 def cin_images(vid):
-    #cascPath = "C:/Users/MSI/Anaconda3/Library/etc/haarcascades/haarcascade_frontalface_default.xml"
-    #cas = cv2.CascadeClassifier(cascPath)
+    cascPath = "C:/Users/MSI/Anaconda3/Library/etc/haarcascades/haarcascade_frontalface_default.xml"
+    cas = cv2.CascadeClassifier(cascPath)
     filename = "D:/query_data/facialrec/Videos/cinematics/" + vid
     vidcap2 = cv2.VideoCapture(filename)
     success2,image2 = vidcap2.read()
@@ -24,9 +24,23 @@ def cin_images(vid):
     count2 = 0
     while success2:
         
-        
-        image2 = cv2.resize(image2, (200, 200), interpolation = cv2.INTER_AREA)
-        cv2.imwrite(cin_dir + string + "_frame_" + str(count2) + ".jpg", image2)
+        gray = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
+
+        # Detect faces in the image
+        faces = cas.detectMultiScale(
+            gray,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(80, 80),
+            flags = cv2.CASCADE_SCALE_IMAGE
+            )
+
+        # Draw a rectangle around the faces
+        for (x, y, w, h) in faces:
+            #cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            rect = image2[y:y+h, x:x+w]
+        rect = cv2.resize(rect, (200, 200), interpolation = cv2.INTER_AREA)
+        cv2.imwrite(cin_dir + string + "_frame_" + str(count2) + ".jpg", rect)
         count2 += 1
 
         # cv2.imwrite("frame%d.jpg" % count2, image)     # save frame as JPEG file      
