@@ -21,6 +21,7 @@ def cin_images(vid):
     # Disregard the last comment, I'm python god
     string = vid.replace(".mp4", "")
     cin_dir = "D:/query_data/facialrec/Cinematic_Images/" + string + "/"
+    os.makedirs(cin_dir, exist_ok = True)
     count2 = 0
     while success2:
         
@@ -31,7 +32,7 @@ def cin_images(vid):
             gray,
             scaleFactor=1.1,
             minNeighbors=5,
-            minSize=(80, 80),
+            minSize=(50, 50),
             flags = cv2.CASCADE_SCALE_IMAGE
             )
 
@@ -39,9 +40,9 @@ def cin_images(vid):
         for (x, y, w, h) in faces:
             #cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
             rect = image2[y:y+h, x:x+w]
-        rect = cv2.resize(rect, (200, 200), interpolation = cv2.INTER_AREA)
-        cv2.imwrite(cin_dir + string + "_frame_" + str(count2) + ".jpg", rect)
-        count2 += 1
+            rect = cv2.resize(rect, (50, 50), interpolation = cv2.INTER_AREA)
+            cv2.imwrite(cin_dir + string + "_frame_" + str(count2) + ".jpg", rect)
+            count2 += 1
 
         # cv2.imwrite("frame%d.jpg" % count2, image)     # save frame as JPEG file      
         success2,image2 = vidcap2.read()

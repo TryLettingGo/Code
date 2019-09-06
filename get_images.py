@@ -23,7 +23,7 @@ val_dir = "D:/query_data/facialrec/Validation/"
 
 champs = ["Camille", "Diana", "Ezreal", "Graves", "Jayce", "Karma", "Lucian", "Syndra", "Talon", "Vi"]
 
-#coords = pd.read_csv(git_dir + "Data/coords.csv")
+coords = pd.read_csv(git_dir + "Data/coords.csv")
 
 #for each in champs
 for i in range(len(champs)):
@@ -35,22 +35,28 @@ for i in range(len(champs)):
     os.makedirs(val_dir + name, exist_ok = True)
     champ_dir  = img_dir + name
     #logins
-    '''
+    
     vidcap = cv2.VideoCapture(vid_dir + "logins/" + name + '/video_login.mp4')
     success,image = vidcap.read()
     count = 0
     login_dir = champ_dir + "/logins/"
     os.makedirs(login_dir, exist_ok = True)
     while success:
+        x = coords['x'][i]
+        y = coords['y'][i]
+        w = coords['w'][i]
+        h = coords['h'][i]                
         
-        image = cv2.resize(image, (200, 200), interpolation = cv2.INTER_AREA)
-        cv2.imwrite(login_dir + name + "_login_frame_" + str(count) + ".jpg", image)     # save frame as JPEG file      
+        newimg = image[y:y+h, x:x+w]
+        newimg = cv2.resize(newimg, (50, 50), interpolation = cv2.INTER_AREA)
+    
+        cv2.imwrite(login_dir + name + "_login_frame_" + str(count) + ".jpg", newimg)     # save frame as JPEG file      
         success,image = vidcap.read()
         print('Read a new ' + name + ' frame: ', success)
         count += 1
         
-    '''
     
+    '''
     #models
     num = os.listdir(vid_dir + "models/" + name) # dir is your directory path
     nfiles = len(num)
@@ -70,20 +76,23 @@ for i in range(len(champs)):
             print('Read new ' + name + ' frame: ', success2)
             count2 += 1
     '''
+    '''
     #getting art data
     art_dir = val_dir + name
     os.makedirs(art_dir, exist_ok = True)
     get_art(name, art_dir + "/")
-    '''
+    
     #cinematic images
-    cin_img_dir = "D:/query_data/facialrec/Cinematic_Images/"
-    cin_vid_dir = vid_dir + "cinematics"
+    
     champ_cin_dir = "D:/query_data/facialrec/Images/" + name + "/cinematics/"
     os.makedirs(champ_cin_dir, exist_ok = True)
     
 #screw it, I'm not* hard coding because I'm a madman
+cin_img_dir = "D:/query_data/facialrec/Cinematic_Images/"
+cin_vid_dir = vid_dir + "cinematics"
 number = os.listdir(vid_dir + "cinematics")
 nvids = len(number)
 for k in range(nvids):
     filename = os.listdir(vid_dir + "cinematics/")[k]
     cin_images(filename)
+'''

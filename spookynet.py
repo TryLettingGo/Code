@@ -31,7 +31,7 @@ validation_data_dir = "D:\\query_data\\facialrec\\Validation"
 nb_train_samples = 17250
 nb_validation_samples = 100
 batch_size = 7
-epochs = 4
+epochs = 1
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
@@ -124,7 +124,9 @@ base_model=MobileNet(weights='imagenet',include_top=False) #imports the mobilene
 x=base_model.output
 x=GlobalAveragePooling2D()(x)
 x=Dense(1024,activation='relu')(x) #we add dense layers so that the model can learn more complex functions and classify for better results.
+x=Dropout(0.5)(x)
 x=Dense(1024,activation='relu')(x) #dense layer 2
+x=Dropout(0.5)(x)
 x=Dense(512,activation='relu')(x) #dense layer 3
 preds=Dense(10,activation='softmax')(x) #final layer with softmax activation
 model = Model(inputs=base_model.input,outputs=preds)
@@ -149,7 +151,7 @@ train_datagen = ImageDataGenerator(
         width_shift_range = 0.3,
         height_shift_range=0.3,
         rotation_range=30,
-        validation_split = 0.2)
+        validation_split = 0.15)
 
 test_datagen = ImageDataGenerator(
         rescale = 1./255,
@@ -190,7 +192,7 @@ results = pd.DataFrame(columns = ["target", "prediction"])
 for q in range(30):
     champs = ["Camille", "Diana", "Ezreal", "Graves", "Jayce", "Karma", "Lucian", "Syndra", "Talon", "Vi"]
     champion = test_image("image" + str(q + 1) + ".jpg")
-    target_index = int(np.ceil((q + 1)/3))
+    target_index = int(np.ceil(((q + 1)/3) - 1))
     results = results.append({"target": champs[target_index], "prediction": champion}, ignore_index = True)
 
 '''
