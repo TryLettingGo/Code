@@ -31,7 +31,7 @@ validation_data_dir = "D:\\query_data\\facialrec\\Validation"
 nb_train_samples = 17250
 nb_validation_samples = 100
 batch_size = 7
-epochs = 1
+epochs = 5
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
@@ -113,6 +113,8 @@ def test_image(filename):
     test = keras.applications.mobilenet.preprocess_input(exd)
     #pred = model_final.predict(test)
     pred = model.predict(test)
+    print("Predictions for " + filename + ": ")
+    print(pred)
     loc = np.argmax(pred)
     name = champs[loc]
     return name
@@ -124,9 +126,7 @@ base_model=MobileNet(weights='imagenet',include_top=False) #imports the mobilene
 x=base_model.output
 x=GlobalAveragePooling2D()(x)
 x=Dense(1024,activation='relu')(x) #we add dense layers so that the model can learn more complex functions and classify for better results.
-x=Dropout(0.5)(x)
 x=Dense(1024,activation='relu')(x) #dense layer 2
-x=Dropout(0.5)(x)
 x=Dense(512,activation='relu')(x) #dense layer 3
 preds=Dense(10,activation='softmax')(x) #final layer with softmax activation
 model = Model(inputs=base_model.input,outputs=preds)
